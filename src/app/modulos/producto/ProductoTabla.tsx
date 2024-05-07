@@ -18,13 +18,13 @@ class ProductoTabla extends Component<RouteComponentProps, ProductoTablaState> {
     }
 
     componentDidMount() {
-        axios.get<IProducto[]>('http://localhost:8090/api/productos').then((response) => {
+        axios.get<IProducto[]>('https://apiminiventas.azurewebsites.net/api/producto').then((response) => {
             this.setState({ productos: response.data });
         });
     }
 
     eliminarProducto = (id: number) => {
-        axios.delete(`http://localhost:8090/api/productos/${id}`).then(() => {
+        axios.delete(`https://apiminiventas.azurewebsites.net/api/producto/${id}`).then(() => {
             this.setState((prevState) => ({
                 productos: prevState.productos.filter((producto) => producto.id !== id),
             }));
@@ -62,7 +62,7 @@ class ProductoTabla extends Component<RouteComponentProps, ProductoTablaState> {
                                     <div className="col-auto">
                                         <Link
                                             className="btn btn-primary"
-                                            to={`${this.props.match.url}/${fila.id}/categorias`}
+                                            to={`${this.props.match.url}/${fila.id}/categoria`}
                                         >
                                             Categorias
                                         </Link>

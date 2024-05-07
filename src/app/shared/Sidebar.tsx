@@ -19,28 +19,28 @@ class Sidebar extends Component {
                     <NavLink
                         className="list-group-item list-group-item-action"
                         activeClassName="active"
-                        to="/ventas"
+                        to="/venta"
                     >
                         Ventas
                     </NavLink>
                     <NavLink
                         className="list-group-item list-group-item-action"
                         activeClassName="active"
-                        to="/productos"
+                        to="/producto"
                     >
                         Productos
                     </NavLink>
                     <NavLink
                         className="list-group-item list-group-item-action"
                         activeClassName="active"
-                        to="/categorias"
+                        to="/categoria"
                     >
                         Categorias
                     </NavLink>
                     <NavLink
                         className="list-group-item list-group-item-action"
                         activeClassName="active"
-                        to="/empleados"
+                        to="/empleado"
                     >
                         Empleados
                     </NavLink>

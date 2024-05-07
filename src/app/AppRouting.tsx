@@ -13,10 +13,10 @@ class AppRouting extends Component {
             <Switch>
                 <Route path="/" component={InicioPagina} exact />
                 <Route path="/caja" component={CajaModulo} />
-                <Route path="/ventas" component={VentaModulo} />
-                <Route path="/productos" component={ProductoModulo} />
-                <Route path="/categorias" component={CategoriaModulo} />
-                <Route path="/empleados" component={EmpleadoModulo} />
+                <Route path="/venta" component={VentaModulo} />
+                <Route path="/producto" component={ProductoModulo} />
+                <Route path="/categoria" component={CategoriaModulo} />
+                <Route path="/empleado" component={EmpleadoModulo} />
             </Switch>
         );
     }

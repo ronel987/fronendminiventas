@@ -23,7 +23,7 @@ class CategoriaEditar extends Component<RouteComponentProps<{ id: string }>, Cat
     }
 
     componentDidMount() {
-        axios.get<ICategoria>(`http://localhost:8090/api/categorias/${this.props.match.params.id}`).then((response) => {
+        axios.get<ICategoria>(`https://apiminiventas.azurewebsites.net/api/categoria/${this.props.match.params.id}`).then((response) => {
             this.setState((prevState) => ({
                 ...prevState,
                 categoria: response.data,
@@ -46,9 +46,9 @@ class CategoriaEditar extends Component<RouteComponentProps<{ id: string }>, Cat
             }));
         } else {
             axios
-                .put(`http://localhost:8090/api/categorias/${this.state.categoria!.id}`, this.state.categoria)
+                .put(`https://apiminiventas.azurewebsites.net/api/categoria/${this.state.categoria!.id}`, this.state.categoria)
                 .then(() => {
-                    this.props.history.push('/categorias');
+                    this.props.history.push('/categoria');
                 });
         }
     };
@@ -93,7 +93,7 @@ class CategoriaEditar extends Component<RouteComponentProps<{ id: string }>, Cat
                             <div className="row">
                                 <div className="col">{this.state.categoria.id}</div>
                                 <div className="col-auto">
-                                    <Link className="btn btn-outline-secondary" to="/categorias">
+                                    <Link className="btn btn-outline-secondary" to="/categoria">
                                         Volver
                                     </Link>
                                 </div>

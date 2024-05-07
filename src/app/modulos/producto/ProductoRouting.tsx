@@ -12,7 +12,7 @@ class ProductoRouting extends Component<RouteComponentProps> {
                 <Route path={this.props.match.url} component={ProductoTabla} exact />
                 <Route path={`${this.props.match.url}/registrar`} component={ProductoRegistrar} exact />
                 <Route path={`${this.props.match.url}/:id/editar`} component={ProductoEditar} exact />
-                <Route path={`${this.props.match.url}/:id/categorias`} component={ProductoCategorias} exact />
+                <Route path={`${this.props.match.url}/:id/categoria`} component={ProductoCategorias} exact />
             </Switch>
         );
     }

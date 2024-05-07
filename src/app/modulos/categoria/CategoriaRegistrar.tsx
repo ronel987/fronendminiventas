@@ -36,8 +36,8 @@ class CategoriaRegistrar extends Component<RouteComponentProps, CategoriaRegistr
                 submitted: true,
             }));
         } else {
-            axios.post('http://localhost:8090/api/categorias', this.state.categoria).then(() => {
-                this.props.history.push('/categorias');
+            axios.post('https://apiminiventas.azurewebsites.net/api/categoria', this.state.categoria).then(() => {
+                this.props.history.push('/categoria');
             });
         }
     };
@@ -84,7 +84,7 @@ class CategoriaRegistrar extends Component<RouteComponentProps, CategoriaRegistr
                         <div className="row">
                             <div className="col">Registrar categoria</div>
                             <div className="col-auto">
-                                <Link className="btn btn-outline-secondary" to="/categorias">
+                                <Link className="btn btn-outline-secondary" to="/categoria">
                                     Volver
                                 </Link>
                             </div>

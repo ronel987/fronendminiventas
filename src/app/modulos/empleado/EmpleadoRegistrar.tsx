@@ -44,7 +44,7 @@ class EmpleadoRegistrar extends Component<RouteComponentProps, EmpleadoRegistrar
             }));
         } else {
             axios
-                .post('http://localhost:8090/api/empleados', {
+                .post('https://apiminiventas.azurewebsites.net/api/empleado', {
                     ...this.state.empleado,
                     nombre: this.state.empleado.nombre.trim(),
                     apellido: this.state.empleado.apellido.trim(),
@@ -52,7 +52,7 @@ class EmpleadoRegistrar extends Component<RouteComponentProps, EmpleadoRegistrar
                     correo: this.state.empleado.correo.trim(),
                 })
                 .then(() => {
-                    this.props.history.push('/empleados');
+                    this.props.history.push('/empleado');
                 });
         }
     };
@@ -238,7 +238,7 @@ class EmpleadoRegistrar extends Component<RouteComponentProps, EmpleadoRegistrar
                         <div className="row">
                             <div className="col">Registrar empleado</div>
                             <div className="col-auto">
-                                <Link className="btn btn-outline-secondary" to="/empleados">
+                                <Link className="btn btn-outline-secondary" to="/empleado">
                                     Volver
                                 </Link>
                             </div>

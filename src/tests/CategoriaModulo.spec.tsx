@@ -4,7 +4,7 @@ import CategoriaModulo from './../app/modulos/categoria/CategoriaModulo';
 
 describe('Tests para categoria modulo', () => {
     render(
-        <StaticRouter context={{ url: '/categorias' }}>
+        <StaticRouter context={{ url: '/categoria' }}>
             <CategoriaModulo />
         </StaticRouter>
     )

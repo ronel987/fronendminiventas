@@ -18,13 +18,13 @@ class VentaTabla extends Component<RouteComponentProps, VentaTablaState> {
     }
 
     componentDidMount() {
-        axios.get<IVenta[]>('http://localhost:8090/api/ventas').then((response) => {
+        axios.get<IVenta[]>('https://apiminiventas.azurewebsites.net/api/venta').then((response) => {
             this.setState({ ventas: response.data });
         });
     }
 
     eliminarVenta = (id: number) => {
-        axios.delete(`http://localhost:8090/api/ventas/${id}`).then(() => {
+        axios.delete(`https://apiminiventas.azurewebsites.net/api/venta/${id}`).then(() => {
             this.setState((prevState) => ({
                 ventas: prevState.ventas.filter((venta) => venta.id !== id),
             }));

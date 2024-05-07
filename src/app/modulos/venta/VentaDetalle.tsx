@@ -19,7 +19,7 @@ class VentaTabla extends Component<RouteComponentProps<{ id: string }>, VentaTab
     }
 
     componentDidMount() {
-        axios.get<IVenta>(`http://localhost:8090/api/ventas/${this.props.match.params.id}`).then((response) => {
+        axios.get<IVenta>(`https://apiminiventas.azurewebsites.net/api/venta/${this.props.match.params.id}`).then((response) => {
             this.setState({ venta: response.data });
         });
     }
@@ -35,7 +35,7 @@ class VentaTabla extends Component<RouteComponentProps<{ id: string }>, VentaTab
                             <div className="row">
                                 <div className="col">{new Date(this.state.venta.fechaRegistro).toDateString()}</div>
                                 <div className="col-auto">
-                                    <Link className="btn btn-outline-secondary" to="/ventas">
+                                    <Link className="btn btn-outline-secondary" to="/venta">
                                         Volver
                                     </Link>
                                 </div>

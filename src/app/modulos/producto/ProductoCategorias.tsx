@@ -29,9 +29,9 @@ class ProductoCategorias extends Component<
     componentDidMount() {
         Promise.all<AxiosResponse<IProducto>, AxiosResponse<ICategoria[]>>([
             axios.get<IProducto>(
-                `http://localhost:8090/api/productos/${this.props.match.params.id}`
+                `https://apiminiventas.azurewebsites.net/api/producto/${this.props.match.params.id}`
             ),
-            axios.get<ICategoria[]>(`http://localhost:8090/api/categorias/`),
+            axios.get<ICategoria[]>(`https://apiminiventas.azurewebsites.net/api/categoria/`),
         ]).then(([responseProducto, responseCategorias]) => {
             this.setState((prevState) => ({
                 ...prevState,
@@ -45,7 +45,7 @@ class ProductoCategorias extends Component<
         e.preventDefault();
         axios
             .post(
-                `http://localhost:8090/api/productos-categorias`,
+                `https://apiminiventas.azurewebsites.net/api/ProductoCategoria`,
                 this.state.carritoCategorias.map((categoria) => ({
                     idProducto: this.state.producto!.id,
                     idCategoria: categoria.id,
@@ -95,9 +95,9 @@ class ProductoCategorias extends Component<
     eliminarCategoria = (id: number) => {
         axios
             .delete(
-                `http://localhost:8090/api/productos/${
+                `https://apiminiventas.azurewebsites.net/api/producto/${
                     this.state.producto!.id
-                }/categorias/${id}`
+                }/categoria/${id}`
             )
             .then(() => {
                 this.setState((prevState) => ({
@@ -125,7 +125,7 @@ class ProductoCategorias extends Component<
                                 <div className="col-auto">
                                     <Link
                                         className="btn btn-outline-secondary"
-                                        to="/productos"
+                                        to="/producto"
                                     >
                                         Volver
                                     </Link>

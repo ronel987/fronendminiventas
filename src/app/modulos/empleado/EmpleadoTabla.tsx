@@ -18,13 +18,13 @@ class EmpleadoTabla extends Component<RouteComponentProps, EmpleadoTablaState> {
     }
 
     componentDidMount() {
-        axios.get<IEmpleado[]>('http://localhost:8090/api/empleados').then((response) => {
+        axios.get<IEmpleado[]>('https://apiminiventas.azurewebsites.net/api/empleado').then((response) => {
             this.setState({ empleados: response.data });
         });
     }
 
     eliminarEmpleado = (id: string) => {
-        axios.delete(`http://localhost:8090/api/empleados/${id}`).then(() => {
+        axios.delete(`https://apiminiventas.azurewebsites.net/api/empleado/${id}`).then(() => {
             this.setState((prevState) => ({
                 empleados: prevState.empleados.filter((empleado) => empleado.id !== id),
             }));

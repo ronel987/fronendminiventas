@@ -34,7 +34,7 @@ class ProductoRegistrar extends Component<RouteComponentProps, ProductoRegistrar
 
     componentDidMount() {
         this.validarFormulario();
-        axios.get<ICategoria[]>('http://localhost:8090/api/categorias').then((response) => {
+        axios.get<ICategoria[]>('https://apiminiventas.azurewebsites.net/api/categoria').then((response) => {
             this.setState((prevState) => ({
                 ...prevState,
                 categorias: response.data,
@@ -51,7 +51,7 @@ class ProductoRegistrar extends Component<RouteComponentProps, ProductoRegistrar
             }));
         } else {
             axios
-                .post('http://localhost:8090/api/productos', {
+                .post('https://apiminiventas.azurewebsites.net/api/producto', {
                     ...this.state.producto,
                     nombre: this.state.producto.nombre.trim(),
                     marca: this.state.producto.marca.trim(),
@@ -60,7 +60,7 @@ class ProductoRegistrar extends Component<RouteComponentProps, ProductoRegistrar
                     stock: parseInt(this.state.producto.stock as string),
                 })
                 .then(() => {
-                    this.props.history.push('/productos');
+                    this.props.history.push('/producto');
                 });
         }
     };
@@ -183,7 +183,7 @@ class ProductoRegistrar extends Component<RouteComponentProps, ProductoRegistrar
                         <div className="row">
                             <div className="col">Registrar producto</div>
                             <div className="col-auto">
-                                <Link className="btn btn-outline-secondary" to="/productos">
+                                <Link className="btn btn-outline-secondary" to="/producto">
                                     Volver
                                 </Link>
                             </div>

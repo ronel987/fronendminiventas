@@ -18,7 +18,7 @@ class CategoriaTabla extends Component<RouteComponentProps, CategoriaTablaState>
     }
 
     componentDidMount() {
-        axios.get<ICategoria[]>('http://localhost:8090/api/categorias').then((response) => {
+        axios.get<ICategoria[]>('https://apiminiventas.azurewebsites.net/api/categoria').then((response) => {
             this.setState({
                 categorias: response.data,
             });
@@ -26,7 +26,7 @@ class CategoriaTabla extends Component<RouteComponentProps, CategoriaTablaState>
     }
 
     eliminarCategoria = (id: number) => {
-        axios.delete(`http://localhost:8090/api/categorias/${id}`).then(() => {
+        axios.delete(`https://apiminiventas.azurewebsites.net/api/categoria/${id}`).then(() => {
             this.setState((prevState) => ({
                 categorias: prevState.categorias.filter((categoria) => categoria.id !== id),
             }));

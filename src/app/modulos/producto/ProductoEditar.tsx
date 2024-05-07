@@ -26,10 +26,10 @@ class ProductoEditar extends Component<RouteComponentProps<{ id: string }>, Prod
     }
 
     componentDidMount() {
-        axios.get<IProducto>(`http://localhost:8090/api/productos/${this.props.match.params.id}`).then((response) => {
+        axios.get<IProducto>(`https://apiminiventas.azurewebsites.net/api/producto/${this.props.match.params.id}`).then((response) => {
             this.setState((prevState) => ({ ...prevState, producto: response.data }));
         });
-        axios.get<ICategoria[]>('http://localhost:8090/api/categorias').then((response) => {
+        axios.get<ICategoria[]>('https://apiminiventas.azurewebsites.net/api/categoria').then((response) => {
             this.setState((prevState) => ({
                 ...prevState,
                 categorias: response.data,
@@ -52,7 +52,7 @@ class ProductoEditar extends Component<RouteComponentProps<{ id: string }>, Prod
             }));
         } else {
             axios
-                .put(`http://localhost:8090/api/productos/${this.state.producto!.id}`, {
+                .put(`https://apiminiventas.azurewebsites.net/api/producto/${this.state.producto!.id}`, {
                     ...this.state.producto,
                     nombre: this.state.producto!.nombre.trim(),
                     marca: this.state.producto!.marca.trim(),
@@ -61,7 +61,7 @@ class ProductoEditar extends Component<RouteComponentProps<{ id: string }>, Prod
                     stock: parseInt(this.state.producto!.stock as string),
                 })
                 .then(() => {
-                    this.props.history.push('/productos');
+                    this.props.history.push('/producto');
                 });
         }
     };
@@ -170,7 +170,7 @@ class ProductoEditar extends Component<RouteComponentProps<{ id: string }>, Prod
                             <div className="row">
                                 <div className="col">{this.state.producto.id}</div>
                                 <div className="col-auto">
-                                    <Link className="btn btn-outline-secondary" to="/productos">
+                                    <Link className="btn btn-outline-secondary" to="/producto">
                                         Volver
                                     </Link>
                                 </div>
