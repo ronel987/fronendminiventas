@@ -7,7 +7,7 @@ class InicioPagina extends Component {
                 <header>
                     <h1 className="display-5">Bienvenido a Mini Ventas</h1>
                 </header>
-                <img className="img-thumbnail" src="/imagenes/homepage-img.webP" alt="store" />
+                <img className="img-thumbnail" src="/imagenes/homepage-img.webp" alt="store" />
             </div>
         );
     }
