@@ -36,7 +36,7 @@ class CategoriaRegistrar extends Component<RouteComponentProps, CategoriaRegistr
                 submitted: true,
             }));
         } else {
-            axios.post('https://apiminiventas.azurewebsites.net/api/categoria', this.state.categoria).then(() => {
+            axios.post('https://backminiventas20251020191423.azurewebsites.net/api/categoria', this.state.categoria).then(() => {
                 this.props.history.push('/categoria');
             });
         }

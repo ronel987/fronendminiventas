@@ -34,7 +34,7 @@ class ProductoRegistrar extends Component<RouteComponentProps, ProductoRegistrar
 
     componentDidMount() {
         this.validarFormulario();
-        axios.get<ICategoria[]>('https://apiminiventas.azurewebsites.net/api/categoria').then((response) => {
+        axios.get<ICategoria[]>('https://backminiventas20251020191423.azurewebsites.net/api/categoria').then((response) => {
             this.setState((prevState) => ({
                 ...prevState,
                 categorias: response.data,
@@ -51,7 +51,7 @@ class ProductoRegistrar extends Component<RouteComponentProps, ProductoRegistrar
             }));
         } else {
             axios
-                .post('https://apiminiventas.azurewebsites.net/api/producto', {
+                .post('https://backminiventas20251020191423.azurewebsites.net/api/producto', {
                     ...this.state.producto,
                     nombre: this.state.producto.nombre.trim(),
                     marca: this.state.producto.marca.trim(),

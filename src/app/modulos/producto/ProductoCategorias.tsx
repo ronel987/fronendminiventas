@@ -29,9 +29,9 @@ class ProductoCategorias extends Component<
     componentDidMount() {
         Promise.all<AxiosResponse<IProducto>, AxiosResponse<ICategoria[]>>([
             axios.get<IProducto>(
-                `https://apiminiventas.azurewebsites.net/api/producto/${this.props.match.params.id}`
+                `https://backminiventas20251020191423.azurewebsites.net/api/producto/${this.props.match.params.id}`
             ),
-            axios.get<ICategoria[]>(`https://apiminiventas.azurewebsites.net/api/categoria/`),
+            axios.get<ICategoria[]>(`https://backminiventas20251020191423.azurewebsites.net/api/categoria/`),
         ]).then(([responseProducto, responseCategorias]) => {
             this.setState((prevState) => ({
                 ...prevState,
@@ -45,7 +45,7 @@ class ProductoCategorias extends Component<
         e.preventDefault();
         axios
             .post(
-                `https://apiminiventas.azurewebsites.net/api/ProductoCategoria`,
+                `https://backminiventas20251020191423.azurewebsites.net/api/ProductoCategoria`,
                 this.state.carritoCategorias.map((categoria) => ({
                     idProducto: this.state.producto!.id,
                     idCategoria: categoria.id,
@@ -95,7 +95,7 @@ class ProductoCategorias extends Component<
     eliminarCategoria = (id: number) => {
         axios
             .delete(
-                `https://apiminiventas.azurewebsites.net/api/producto/${
+                `https://backminiventas20251020191423.azurewebsites.net/api/producto/${
                     this.state.producto!.id
                 }/categoria/${id}`
             )

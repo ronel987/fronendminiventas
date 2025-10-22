@@ -26,10 +26,10 @@ class ProductoEditar extends Component<RouteComponentProps<{ id: string }>, Prod
     }
 
     componentDidMount() {
-        axios.get<IProducto>(`https://apiminiventas.azurewebsites.net/api/producto/${this.props.match.params.id}`).then((response) => {
+        axios.get<IProducto>(`https://backminiventas20251020191423.azurewebsites.net/api/producto/${this.props.match.params.id}`).then((response) => {
             this.setState((prevState) => ({ ...prevState, producto: response.data }));
         });
-        axios.get<ICategoria[]>('https://apiminiventas.azurewebsites.net/api/categoria').then((response) => {
+        axios.get<ICategoria[]>('https://backminiventas20251020191423.azurewebsites.net/api/categoria').then((response) => {
             this.setState((prevState) => ({
                 ...prevState,
                 categorias: response.data,
@@ -52,7 +52,7 @@ class ProductoEditar extends Component<RouteComponentProps<{ id: string }>, Prod
             }));
         } else {
             axios
-                .put(`https://apiminiventas.azurewebsites.net/api/producto/${this.state.producto!.id}`, {
+                .put(`https://backminiventas20251020191423.azurewebsites.net/api/producto/${this.state.producto!.id}`, {
                     ...this.state.producto,
                     nombre: this.state.producto!.nombre.trim(),
                     marca: this.state.producto!.marca.trim(),

@@ -34,8 +34,8 @@ class Caja extends Component<RouteComponentProps, CajaState> {
 
     componentDidMount() {
         Promise.all<AxiosResponse<IEmpleado[]>, AxiosResponse<IProducto[]>>([
-            axios.get<IEmpleado[]>('https://apiminiventas.azurewebsites.net/api/empleado'),
-            axios.get<IProducto[]>('https://apiminiventas.azurewebsites.net/api/producto'),
+            axios.get<IEmpleado[]>('https://backminiventas20251020191423.azurewebsites.net/api/empleado'),
+            axios.get<IProducto[]>('https://backminiventas20251020191423.azurewebsites.net/api/producto'),
         ]).then(([responseEmpleados, responseProductos]) => {
             this.setState((prevState) => ({
                 ...prevState,
@@ -57,7 +57,7 @@ class Caja extends Component<RouteComponentProps, CajaState> {
         };
 
         if (venta.ventaDetalle.length > 0) {
-            axios.post('https://apiminiventas.azurewebsites.net/api/venta', venta).then(() => {
+            axios.post('https://backminiventas20251020191423.azurewebsites.net/api/venta', venta).then(() => {
                 this.props.history.push('/venta/:id/detalle');
             });
         }

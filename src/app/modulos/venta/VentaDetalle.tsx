@@ -19,7 +19,7 @@ class VentaTabla extends Component<RouteComponentProps<{ id: string }>, VentaTab
     }
 
     componentDidMount() {
-        axios.get<IVenta>(`https://apiminiventas.azurewebsites.net/api/venta/${this.props.match.params.id}`).then((response) => {
+        axios.get<IVenta>(`https://backminiventas20251020191423.azurewebsites.net/api/venta/${this.props.match.params.id}`).then((response) => {
             this.setState({ venta: response.data });
         });
     }

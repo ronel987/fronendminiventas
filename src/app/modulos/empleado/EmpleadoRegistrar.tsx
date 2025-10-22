@@ -44,7 +44,7 @@ class EmpleadoRegistrar extends Component<RouteComponentProps, EmpleadoRegistrar
             }));
         } else {
             axios
-                .post('https://apiminiventas.azurewebsites.net/api/empleado', {
+                .post('https://backminiventas20251020191423.azurewebsites.net/api/empleado', {
                     ...this.state.empleado,
                     nombre: this.state.empleado.nombre.trim(),
                     apellido: this.state.empleado.apellido.trim(),

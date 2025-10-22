@@ -23,7 +23,7 @@ class CategoriaEditar extends Component<RouteComponentProps<{ id: string }>, Cat
     }
 
     componentDidMount() {
-        axios.get<ICategoria>(`https://apiminiventas.azurewebsites.net/api/categoria/${this.props.match.params.id}`).then((response) => {
+        axios.get<ICategoria>(`https://backminiventas20251020191423.azurewebsites.net/api/categoria/${this.props.match.params.id}`).then((response) => {
             this.setState((prevState) => ({
                 ...prevState,
                 categoria: response.data,
@@ -46,7 +46,7 @@ class CategoriaEditar extends Component<RouteComponentProps<{ id: string }>, Cat
             }));
         } else {
             axios
-                .put(`https://apiminiventas.azurewebsites.net/api/categoria/${this.state.categoria!.id}`, this.state.categoria)
+                .put(`https://backminiventas20251020191423.azurewebsites.net/api/categoria/${this.state.categoria!.id}`, this.state.categoria)
                 .then(() => {
                     this.props.history.push('/categoria');
                 });

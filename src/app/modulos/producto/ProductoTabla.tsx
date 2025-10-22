@@ -18,13 +18,13 @@ class ProductoTabla extends Component<RouteComponentProps, ProductoTablaState> {
     }
 
     componentDidMount() {
-        axios.get<IProducto[]>('https://apiminiventas.azurewebsites.net/api/producto').then((response) => {
+        axios.get<IProducto[]>('https://backminiventas20251020191423.azurewebsites.net/api/producto').then((response) => {
             this.setState({ productos: response.data });
         });
     }
 
     eliminarProducto = (id: number) => {
-        axios.delete(`https://apiminiventas.azurewebsites.net/api/producto/${id}`).then(() => {
+        axios.delete(`https://backminiventas20251020191423.azurewebsites.net/api/producto/${id}`).then(() => {
             this.setState((prevState) => ({
                 productos: prevState.productos.filter((producto) => producto.id !== id),
             }));
