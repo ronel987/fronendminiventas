@@ -58,7 +58,7 @@ class Caja extends Component<RouteComponentProps, CajaState> {
 
         // 1. Filtrar y Mapear: Convertir tipos de string a number para el API
         const ventaDetalleFinal = this.state.ventaDetalles
-            .filter((detalle) => {
+            .filter((detalle:any) => {
                 // Incluir solo si hay un producto seleccionado Y la cantidad es un número válido y positivo
                 const cantidadNumerica = parseFloat(detalle.cantidad as string);
                 return (
@@ -67,7 +67,7 @@ class Caja extends Component<RouteComponentProps, CajaState> {
                     cantidadNumerica > 0
                 );
             })
-            .map((detalle) => ({
+            .map((detalle:any) => ({
                 // *** FIX CRÍTICO: Convertir string IDs y Cantidad a NUMBER para el payload del API ***
                 idProducto: parseInt(detalle.idProducto, 10), // Convertir ID de Producto (string) a int
                 precioUnidad: detalle.precioUnidad,
