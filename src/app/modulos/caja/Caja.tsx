@@ -1,6 +1,7 @@
 import React, { Component, FormEventHandler } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
+// Asumo que estas interfaces esperan números para idProducto y cantidad en la estructura final de API
 import { IVentaRegistrar } from './../../interfaces/IVenta';
 import { IVentaDetalleRegistrar } from './../../interfaces/IVentaDetalle';
 import { IEmpleado } from './../../interfaces/IEmpleado';
@@ -10,7 +11,9 @@ interface CajaState {
     empleadoSeleccionadoId: string;
     empleados: IEmpleado[];
     productos: IProducto[];
+    // Usamos string/number para cantidad y idProducto en el state para manejar la entrada de formularios
     ventaDetalles: IVentaDetalleRegistrar[];
+    errorMessage: string; // Nuevo estado para mensajes de error
 }
 
 class Caja extends Component<RouteComponentProps, CajaState> {
@@ -25,14 +28,16 @@ class Caja extends Component<RouteComponentProps, CajaState> {
                 {
                     idProducto: '',
                     precioUnidad: 0,
-                    cantidad: 0,
+                    cantidad: 0, // Inicializar como número 0, pero se actualizará como string desde el input
                     subTotal: 0,
                 },
             ],
+            errorMessage: '',
         };
     }
 
     componentDidMount() {
+        // Carga de datos inicial
         Promise.all<AxiosResponse<IEmpleado[]>, AxiosResponse<IProducto[]>>([
             axios.get<IEmpleado[]>('https://backminiventas20251020191423.azurewebsites.net/api/empleado'),
             axios.get<IProducto[]>('https://backminiventas20251020191423.azurewebsites.net/api/producto'),
@@ -42,26 +47,128 @@ class Caja extends Component<RouteComponentProps, CajaState> {
                 empleados: responseEmpleados.data,
                 productos: responseProductos.data,
             }));
+        }).catch(error => {
+            console.error('Error al cargar datos iniciales:', error);
+            this.setState({ errorMessage: 'Error al cargar empleados o productos.' });
         });
     }
 
     handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
+
+        // 1. Filtrar y Mapear: Convertir tipos de string a number para el API
+        const ventaDetalleFinal = this.state.ventaDetalles
+            .filter((detalle) => {
+                // Incluir solo si hay un producto seleccionado Y la cantidad es un número válido y positivo
+                const cantidadNumerica = parseFloat(detalle.cantidad as string);
+                return (
+                    detalle.idProducto &&
+                    !isNaN(cantidadNumerica) &&
+                    cantidadNumerica > 0
+                );
+            })
+            .map((detalle) => ({
+                // *** FIX CRÍTICO: Convertir string IDs y Cantidad a NUMBER para el payload del API ***
+                idProducto: parseInt(detalle.idProducto, 10), // Convertir ID de Producto (string) a int
+                precioUnidad: detalle.precioUnidad,
+                cantidad: parseFloat(detalle.cantidad as string), // Convertir Cantidad (string) a float
+                subTotal: detalle.subTotal,
+            }));
+
+        const idEmpleado = parseInt(this.state.empleadoSeleccionadoId, 10);
+
+        // 2. Construir el objeto final de Venta
         const venta: IVentaRegistrar = {
-            idEmpleado: parseInt(this.state.empleadoSeleccionadoId),
-            ventaDetalle: this.state.ventaDetalles.filter(
-                (ventaDetalle) => ventaDetalle.idProducto && !isNaN(ventaDetalle.cantidad as number)
-            ),
+            idEmpleado: idEmpleado,
+            ventaDetalle: ventaDetalleFinal as IVentaDetalleRegistrar[],
             total: this.state.ventaDetalles.reduce((total, ventaDetalle) => total + ventaDetalle.subTotal, 0),
             estado: true,
         };
 
-        if (venta.ventaDetalle.length > 0) {
-            axios.post('https://backminiventas20251020191423.azurewebsites.net/api/venta', venta).then(() => {
-                this.props.history.push('/venta/:id/detalle');
-            });
+        // 3. Validación y Envío
+        if (idEmpleado && !isNaN(idEmpleado) && venta.ventaDetalle.length > 0) {
+            this.setState({ errorMessage: '' }); // Limpiar error previo
+            axios.post('https://backminiventas20251020191423.azurewebsites.net/api/venta', venta)
+                .then(() => {
+                    this.props.history.push('/venta/:id/detalle');
+                })
+                .catch((error) => {
+                    // Manejo de error 400 del servidor
+                    console.error('Error al realizar la venta:', error.response?.data || error.message);
+                    this.setState({ 
+                        errorMessage: `Error (Código ${error.response?.status || 'desconocido'}) al realizar la venta. Verifica la consola para detalles del servidor.`
+                    });
+                });
+        } else {
+            this.setState({ errorMessage: 'Por favor, selecciona un empleado y agrega al menos un producto con cantidad válida.' });
         }
     };
+
+    // Lógica de cambio para el producto
+    handleProductoChange = (value: string, i: number) => {
+        this.setState((prevState) => {
+            const producto = this.state.productos.find(
+                (p) => p.id === parseInt(value)
+            );
+            
+            // Usamos la cantidad actual del state (que es un string)
+            const currentCantidad = parseFloat(prevState.ventaDetalles[i].cantidad as string);
+
+            let ventaDetalle = {
+                ...prevState.ventaDetalles[i],
+                idProducto: value, // Guardar como string
+                precioUnidad: producto ? producto.precio : 0,
+            };
+
+            // Cálculo de SubTotal: Usar parseFloat para la cantidad para mayor precisión
+            ventaDetalle.subTotal = isNaN(currentCantidad)
+                ? 0
+                : parseFloat(
+                      (currentCantidad * ventaDetalle.precioUnidad).toFixed(2)
+                  );
+
+            // Retornar el nuevo estado
+            return {
+                ...prevState,
+                ventaDetalles: ([] as IVentaDetalleRegistrar[]).concat(
+                    prevState.ventaDetalles.slice(0, i),
+                    [ventaDetalle],
+                    prevState.ventaDetalles.slice(i + 1)
+                ),
+            };
+        });
+    }
+
+    // Lógica de cambio para la cantidad
+    handleCantidadChange = (value: string, i: number) => {
+        this.setState((prevState) => {
+            // La cantidad ingresada (value) es un string. Convertir a float para el cálculo.
+            const newCantidad = parseFloat(value);
+
+            let ventaDetalle = {
+                ...prevState.ventaDetalles[i],
+                cantidad: value, // Guardar el valor del input (string) en el estado
+            };
+
+            // Cálculo de SubTotal: Usar parseFloat para la cantidad
+            ventaDetalle.subTotal = isNaN(newCantidad)
+                ? 0
+                : parseFloat(
+                      (newCantidad * ventaDetalle.precioUnidad).toFixed(2)
+                  );
+
+            // Retornar el nuevo estado
+            return {
+                ...prevState,
+                ventaDetalles: ([] as IVentaDetalleRegistrar[]).concat(
+                    prevState.ventaDetalles.slice(0, i),
+                    [ventaDetalle],
+                    prevState.ventaDetalles.slice(i + 1)
+                ),
+            };
+        });
+    }
+
 
     render() {
         return (
@@ -69,6 +176,14 @@ class Caja extends Component<RouteComponentProps, CajaState> {
                 <header>
                     <h1 className="display-6">CAJA</h1>
                 </header>
+                
+                {/* Mensaje de Error */}
+                {this.state.errorMessage && (
+                    <div className="alert alert-danger mb-3" role="alert">
+                        {this.state.errorMessage}
+                    </div>
+                )}
+                
                 <div className="row gx-2 mb-3">
                     <div className="col-auto">
                         <label htmlFor="empleado">Empleado</label>
@@ -81,10 +196,11 @@ class Caja extends Component<RouteComponentProps, CajaState> {
                                 this.setState((prevState) => ({
                                     ...prevState,
                                     empleadoSeleccionadoId: value,
+                                    errorMessage: '', // Limpiar error al cambiar empleado
                                 }));
                             }}
                         >
-                            <option value="">--Seleciona un empleado--</option>
+                            <option value="">--Selecciona un empleado--</option>
                             {this.state.empleados.map((empleado) => (
                                 <option
                                     key={empleado.id}
@@ -109,44 +225,10 @@ class Caja extends Component<RouteComponentProps, CajaState> {
                                                 className="form-control"
                                                 value={ventaDetalle.idProducto}
                                                 onChange={({ target: { value } }) => {
-                                                    this.setState((prevState) => {
-                                                        const producto = this.state.productos.find(
-                                                            (producto) => producto.id === parseInt(value)
-                                                        );
-                                                        let ventaDetalle = {
-                                                            ...this.state.ventaDetalles[i],
-                                                            idProducto: value,
-                                                        };
-
-                                                        if (producto) {
-                                                            ventaDetalle.precioUnidad = producto.precio;
-                                                            ventaDetalle.subTotal = isNaN(
-                                                                parseInt(ventaDetalle.cantidad as string)
-                                                            )
-                                                                ? 0
-                                                                : parseFloat(
-                                                                      (
-                                                                          parseInt(ventaDetalle.cantidad as string) *
-                                                                          producto.precio
-                                                                      ).toFixed(2)
-                                                                  );
-                                                        } else {
-                                                            ventaDetalle.precioUnidad = 0;
-                                                            ventaDetalle.subTotal = 0;
-                                                        }
-
-                                                        return {
-                                                            ...prevState,
-                                                            ventaDetalles: ([] as IVentaDetalleRegistrar[]).concat(
-                                                                prevState.ventaDetalles.slice(0, i),
-                                                                [ventaDetalle],
-                                                                prevState.ventaDetalles.slice(i + 1)
-                                                            ),
-                                                        };
-                                                    });
+                                                    this.handleProductoChange(value, i);
                                                 }}
                                             >
-                                                <option value="">--Seleciona un producto--</option>
+                                                <option value="">--Selecciona un producto--</option>
                                                 {this.state.productos.map((producto) => (
                                                     <option key={producto.id} value={producto.id}>
                                                         {producto.nombre}
@@ -170,33 +252,12 @@ class Caja extends Component<RouteComponentProps, CajaState> {
                                                 id={`cantidad${i}`}
                                                 name="cantidad"
                                                 className="form-control"
+                                                type="number" // Asegurar que solo se permitan números en el input
+                                                min="0"
+                                                step="any"
                                                 value={ventaDetalle.cantidad}
                                                 onChange={({ target: { value } }) => {
-                                                    this.setState((prevState) => {
-                                                        let ventaDetalle = {
-                                                            ...this.state.ventaDetalles[i],
-                                                            cantidad: value,
-                                                        };
-                                                        ventaDetalle.subTotal = isNaN(
-                                                            parseInt(ventaDetalle.cantidad as string)
-                                                        )
-                                                            ? 0
-                                                            : parseFloat(
-                                                                  (
-                                                                      parseInt(ventaDetalle.cantidad as string) *
-                                                                      ventaDetalle.precioUnidad
-                                                                  ).toFixed(2)
-                                                              );
-
-                                                        return {
-                                                            ...prevState,
-                                                            ventaDetalles: ([] as IVentaDetalleRegistrar[]).concat(
-                                                                prevState.ventaDetalles.slice(0, i),
-                                                                [ventaDetalle],
-                                                                prevState.ventaDetalles.slice(i + 1)
-                                                            ),
-                                                        };
-                                                    });
+                                                    this.handleCantidadChange(value, i);
                                                 }}
                                             />
                                         </div>
@@ -255,6 +316,7 @@ class Caja extends Component<RouteComponentProps, CajaState> {
                                                     subTotal: 0,
                                                 },
                                             ],
+                                            errorMessage: '', // Limpiar error al agregar línea
                                         }));
                                     }}
                                 >
@@ -268,7 +330,7 @@ class Caja extends Component<RouteComponentProps, CajaState> {
                                 {this.state.ventaDetalles.reduce(
                                     (total, ventaDetalle) => total + ventaDetalle.subTotal,
                                     0
-                                )}
+                                ).toFixed(2)}
                             </p>
                         </div>
                         <button className="btn btn-primary w-100" type="submit">
