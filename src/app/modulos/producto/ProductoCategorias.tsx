@@ -97,7 +97,7 @@ class ProductoCategorias extends Component<
             .delete(
                 `https://backminiventas20251020191423.azurewebsites.net/api/producto/${
                     this.state.producto!.id
-                }/categoria/${id}`
+                }/categorias/${id}`
             )
             .then(() => {
                 this.setState((prevState) => ({
