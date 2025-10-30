@@ -80,13 +80,13 @@ class Caja extends Component<RouteComponentProps, CajaState> {
         // 2. Construir el objeto final de Venta
         const venta: IVentaRegistrar = {
             idEmpleado: idEmpleado,
-            ventaDetalle: ventaDetalleFinal as IVentaDetalleRegistrar[],
+            ventaDetalles: ventaDetalleFinal as IVentaDetalleRegistrar[],
             total: this.state.ventaDetalles.reduce((total, ventaDetalle) => total + ventaDetalle.subTotal, 0),
             estado: true,
         };
 
         // 3. Validación y Envío
-        if (idEmpleado && venta.ventaDetalle.length > 0) {
+        if (idEmpleado && venta.ventaDetalles.length > 0) {
             this.setState({ errorMessage: '' }); // Limpiar error previo
             axios.post('https://backminiventas20251020191423.azurewebsites.net/api/venta', venta)
                 .then(() => {
