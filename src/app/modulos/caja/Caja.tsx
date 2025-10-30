@@ -1,6 +1,6 @@
 import React, { Component, FormEventHandler } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 // Asumo que estas interfaces esperan números para idProducto y cantidad en la estructura final de API
 import { IVentaRegistrar } from './../../interfaces/IVenta';
 import { IVentaDetalleRegistrar } from './../../interfaces/IVentaDetalle';
