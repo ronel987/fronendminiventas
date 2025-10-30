@@ -38,7 +38,7 @@ class Caja extends Component<RouteComponentProps, CajaState> {
 
     componentDidMount() {
         // Carga de datos inicial
-        Promise.all<AxiosResponse<IEmpleado[]>, AxiosResponse<IProducto[]>>([
+        Promise.all([
             axios.get<IEmpleado[]>('https://backminiventas20251020191423.azurewebsites.net/api/empleado'),
             axios.get<IProducto[]>('https://backminiventas20251020191423.azurewebsites.net/api/producto'),
         ]).then(([responseEmpleados, responseProductos]) => {
