@@ -75,7 +75,7 @@ class Caja extends Component<RouteComponentProps, CajaState> {
                 subTotal: detalle.subTotal,
             }));
 
-        const idEmpleado = parseInt(this.state.empleadoSeleccionadoId, 10);
+        const idEmpleado = this.state.empleadoSeleccionadoId;
 
         // 2. Construir el objeto final de Venta
         const venta: IVentaRegistrar = {
@@ -86,7 +86,7 @@ class Caja extends Component<RouteComponentProps, CajaState> {
         };
 
         // 3. Validación y Envío
-        if (idEmpleado && !isNaN(idEmpleado) && venta.ventaDetalle.length > 0) {
+        if (idEmpleado && venta.ventaDetalle.length > 0) {
             this.setState({ errorMessage: '' }); // Limpiar error previo
             axios.post('https://backminiventas20251020191423.azurewebsites.net/api/venta', venta)
                 .then(() => {

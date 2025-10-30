@@ -11,7 +11,7 @@ export interface IVenta {
 }
 
 export interface IVentaRegistrar {
-    idEmpleado: number;
+    idEmpleado: string;
     ventaDetalle: IVentaDetalleRegistrar[];
     total: number | string;
     estado: boolean;
